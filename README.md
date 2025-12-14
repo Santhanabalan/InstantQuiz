@@ -1,16 +1,91 @@
-# React + Vite
+# InstantQuiz
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+InstantQuiz is a modern, client-side quiz application that allows you to upload CSV files containing questions and generate interactive practice exams instantly. Built with React, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **CSV Upload**: Drag-and-drop CSV file upload with auto-detection of various formats
+- **Quiz Configuration**: Customize question count, timer, passing score, and randomization options
+- **Interactive Exam**: Distraction-free quiz-taking experience with progress tracking
+- **Analytics Dashboard**: Detailed results with score visualization and question review
+- **Responsive Design**: Mobile-first design that works on all devices
+- **Smooth Animations**: Polished transitions using Framer Motion
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Installation
 
-## Expanding the ESLint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Development
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## CSV Format
+
+Your CSV file should contain questions with the following structure:
+
+```csv
+Question Text,Option A,Option B,Option C,Option D,Correct Answer
+What is the capital of France?,London,Berlin,Paris,Madrid,C
+Which planet is known as the Red Planet?,Venus,Mars,Jupiter,Saturn,B
+```
+
+### CSV Requirements
+
+- **6 columns**: Question Text, Option A, Option B, Option C, Option D, Correct Answer
+- **Header row** (optional): The app auto-detects headers
+- **Correct Answer**: Use A, B, C, or D (case-insensitive)
+- **Format**: Standard CSV with comma separators
+
+### Example CSV
+
+An example CSV file is provided at `/public/example-quiz.csv` with 20 sample questions.
+
+## How to Use
+
+1. **Upload CSV**: Drag and drop your CSV file or click to browse
+2. **Configure Quiz**: Set your preferences:
+   - Number of questions
+   - Enable/disable timer
+   - Set passing score percentage
+   - Toggle question/option randomization
+3. **Take Quiz**: Answer questions with a distraction-free interface
+   - Mark questions for review
+   - Navigate between questions
+   - Track your progress
+4. **View Results**: See your score and review all questions
+   - Filter by correct/incorrect/marked
+   - See correct answers for wrong questions
+   - Retake quiz or upload new file
+
+## Technologies
+
+- **React 19** - UI framework
+- **Vite** - Build tool and dev server
+- **Tailwind CSS v4** - Styling
+- **Framer Motion** - Animations
+- **PapaParse** - CSV parsing
+- **Lucide React** - Icons
+
+## License
+
+MIT
