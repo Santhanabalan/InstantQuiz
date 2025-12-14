@@ -1,6 +1,12 @@
 {
+  "metadata": {
+    "title": "React Fundamentals Quiz",
+    "description": "Test your knowledge of React basics and modern web development",
+    "version": "1.0"
+  },
   "questions": [
     {
+      "id": "react-001",
       "question": "What is React?",
       "type": "single-choice",
       "options": [
@@ -9,9 +15,16 @@
         "A database",
         "A web server"
       ],
-      "correctAnswers": [0]
+      "correctAnswers": [0],
+      "explanation": "React is a JavaScript library for building user interfaces, maintained by Meta (formerly Facebook).",
+      "metadata": {
+        "difficulty": "easy",
+        "category": "React Basics",
+        "tags": ["javascript", "react", "fundamentals"]
+      }
     },
     {
+      "id": "react-002",
       "question": "Which hooks manage state in React?",
       "type": "multi-select",
       "options": [
@@ -20,18 +33,32 @@
         "useContext",
         "useReducer"
       ],
-      "correctAnswers": [0, 3]
+      "correctAnswers": [0, 3],
+      "explanation": "useState and useReducer are the primary hooks for managing component state. useEffect handles side effects, and useContext accesses context values.",
+      "metadata": {
+        "difficulty": "medium",
+        "category": "React Hooks",
+        "tags": ["hooks", "state-management"]
+      }
     },
     {
+      "id": "react-003",
       "question": "What does JSX stand for?",
       "type": "single-choice",
       "options": [
         "JavaScript XML",
         "Java Syntax Extension"
       ],
-      "correctAnswers": [0]
+      "correctAnswers": [0],
+      "explanation": "JSX stands for JavaScript XML. It's a syntax extension that allows you to write HTML-like code in JavaScript.",
+      "metadata": {
+        "difficulty": "easy",
+        "category": "React Basics",
+        "tags": ["jsx", "syntax"]
+      }
     },
     {
+      "id": "http-001",
       "question": "Which are valid HTTP methods?",
       "type": "multi-select",
       "options": [
@@ -41,27 +68,48 @@
         "PUT",
         "PATCH"
       ],
-      "correctAnswers": [0, 1, 2, 3, 4]
+      "correctAnswers": [0, 1, 2, 3, 4],
+      "explanation": "All of these are valid HTTP methods. GET retrieves data, POST creates, DELETE removes, PUT replaces, and PATCH partially updates resources.",
+      "metadata": {
+        "difficulty": "easy",
+        "category": "HTTP Basics",
+        "tags": ["http", "rest", "api"]
+      }
     },
     {
+      "id": "react-004",
       "question": "What is a functional component?",
       "type": "fill-in-blank",
       "correctAnswers": [
         "A function that returns JSX",
         "Function component",
         "A function returning JSX"
-      ]
+      ],
+      "explanation": "A functional component is a JavaScript function that returns JSX, representing the component's UI.",
+      "metadata": {
+        "difficulty": "medium",
+        "category": "React Components",
+        "tags": ["components", "functional-programming"]
+      }
     },
     {
+      "id": "redux-001",
       "question": "What is Redux used for?",
       "type": "fill-in-blank",
       "correctAnswers": [
         "State management",
         "Managing state",
         "Global state"
-      ]
+      ],
+      "explanation": "Redux is a predictable state container used for managing application state, especially useful for global state management.",
+      "metadata": {
+        "difficulty": "easy",
+        "category": "State Management",
+        "tags": ["redux", "state"]
+      }
     },
     {
+      "id": "js-001",
       "question": "Which are JavaScript data types?",
       "type": "multi-select",
       "options": [
@@ -69,18 +117,32 @@
         "String",
         "Boolean"
       ],
-      "correctAnswers": [0, 1, 2]
+      "correctAnswers": [0, 1, 2],
+      "explanation": "JavaScript has several primitive types including Number, String, Boolean, along with Object, Symbol, null, and undefined.",
+      "metadata": {
+        "difficulty": "easy",
+        "category": "JavaScript Basics",
+        "tags": ["javascript", "data-types"]
+      }
     },
     {
+      "id": "react-005",
       "question": "What is the virtual DOM?",
       "type": "single-choice",
       "options": [
         "An in-memory representation",
         "A type of database"
       ],
-      "correctAnswers": [0]
+      "correctAnswers": [0],
+      "explanation": "The virtual DOM is an in-memory representation of the actual DOM. React uses it to efficiently update the real DOM by comparing changes.",
+      "metadata": {
+        "difficulty": "medium",
+        "category": "React Internals",
+        "tags": ["virtual-dom", "performance"]
+      }
     },
     {
+      "id": "styling-001",
       "question": "Which libraries are for styling?",
       "type": "multi-select",
       "options": [
@@ -90,26 +152,47 @@
         "D3.js",
         "Chart.js"
       ],
-      "correctAnswers": [0, 1, 2]
+      "correctAnswers": [0, 1, 2],
+      "explanation": "Tailwind CSS, Bootstrap, and Material-UI are styling libraries. D3.js and Chart.js are for data visualization, not styling.",
+      "metadata": {
+        "difficulty": "easy",
+        "category": "CSS Libraries",
+        "tags": ["css", "styling", "ui-libraries"]
+      }
     },
     {
+      "id": "react-006",
       "question": "What is JSX syntax sugar for?",
       "type": "fill-in-blank",
       "correctAnswers": [
         "React.createElement",
         "createElement"
-      ]
+      ],
+      "explanation": "JSX is syntactic sugar for React.createElement() calls. The JSX compiler transforms JSX into these function calls.",
+      "metadata": {
+        "difficulty": "medium",
+        "category": "React Internals",
+        "tags": ["jsx", "transpilation"]
+      }
     },
     {
+      "id": "npm-001",
       "question": "What does npm stand for?",
       "type": "single-choice",
       "options": [
         "Node Package Manager",
         "New Programming Method"
       ],
-      "correctAnswers": [0]
+      "correctAnswers": [0],
+      "explanation": "npm stands for Node Package Manager. It's the default package manager for Node.js.",
+      "metadata": {
+        "difficulty": "easy",
+        "category": "Tools",
+        "tags": ["npm", "package-management"]
+      }
     },
     {
+      "id": "react-007",
       "question": "Which are React lifecycle methods?",
       "type": "multi-select",
       "options": [
@@ -117,7 +200,13 @@
         "render",
         "componentWillUnmount"
       ],
-      "correctAnswers": [0, 1, 2]
+      "correctAnswers": [0, 1, 2],
+      "explanation": "These are classic React class component lifecycle methods. componentDidMount runs after mounting, render returns JSX, and componentWillUnmount runs before unmounting.",
+      "metadata": {
+        "difficulty": "medium",
+        "category": "React Lifecycle",
+        "tags": ["lifecycle", "class-components"]
+      }
     }
   ]
 }
