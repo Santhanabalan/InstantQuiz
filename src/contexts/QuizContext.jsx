@@ -31,7 +31,7 @@ export const QuizProvider = ({ children }) => {
   });
   const [results, setResults] = useState(null);
 
-  // Load questions from CSV
+  // Load questions from JSON
   const loadQuestions = (parsedQuestions) => {
     setQuestions(parsedQuestions);
     setOriginalQuestions(parsedQuestions); // Store original for retakes
@@ -121,6 +121,8 @@ export const QuizProvider = ({ children }) => {
           isCorrect,
           partialScore: isCorrect ? 1 : 0,
           wasMarkedForReview: examState.markedForReview.has(index),
+          explanation: q.explanation,
+          metadata: q.metadata,
         };
       } else if (q.type === 'multi-select') {
         // Multi-select validation
@@ -150,6 +152,8 @@ export const QuizProvider = ({ children }) => {
           isCorrect,
           partialScore: isCorrect ? 1 : 0, // Use all-or-nothing for now
           wasMarkedForReview: examState.markedForReview.has(index),
+          explanation: q.explanation,
+          metadata: q.metadata,
         };
       } else {
         // Single-choice validation
@@ -165,6 +169,8 @@ export const QuizProvider = ({ children }) => {
           isCorrect,
           partialScore: isCorrect ? 1 : 0,
           wasMarkedForReview: examState.markedForReview.has(index),
+          explanation: q.explanation,
+          metadata: q.metadata,
         };
       }
     });

@@ -107,7 +107,7 @@ export const ResultsDashboard = () => {
               className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 dark:bg-gray-700 hover:bg-slate-200 dark:hover:bg-gray-600 text-slate-700 dark:text-gray-200 font-medium rounded-md transition-colors"
             >
               <Upload className="w-5 h-5" />
-              Upload New CSV
+              Upload New Quiz
             </button>
           </div>
 
