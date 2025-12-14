@@ -13,6 +13,7 @@ export const useQuiz = () => {
 export const QuizProvider = ({ children }) => {
   const [phase, setPhase] = useState('ingestion'); // 'ingestion' | 'configuration' | 'exam' | 'analytics'
   const [questions, setQuestions] = useState([]);
+  const [originalQuestions, setOriginalQuestions] = useState([]); // Preserve original questions for retake
   const [config, setConfig] = useState({
     questionCount: 0,
     timerEnabled: false,
@@ -33,13 +34,15 @@ export const QuizProvider = ({ children }) => {
   // Load questions from CSV
   const loadQuestions = (parsedQuestions) => {
     setQuestions(parsedQuestions);
+    setOriginalQuestions(parsedQuestions); // Store original for retakes
     setConfig(prev => ({ ...prev, questionCount: parsedQuestions.length }));
     setPhase('configuration');
   };
 
   // Start quiz with configuration
   const startQuiz = (quizConfig) => {
-    let quizQuestions = [...questions];
+    // Use original questions as base to preserve them for retakes
+    let quizQuestions = [...originalQuestions];
     
     // Apply question shuffling if enabled
     if (quizConfig.shuffleQuestions) {
@@ -54,6 +57,7 @@ export const QuizProvider = ({ children }) => {
       quizQuestions = quizQuestions.map(q => shuffleOptions(q));
     }
     
+    // Set the exam questions (modified version)
     setQuestions(quizQuestions);
     setConfig(quizConfig);
     setExamState({
@@ -139,6 +143,7 @@ export const QuizProvider = ({ children }) => {
   const reset = () => {
     setPhase('ingestion');
     setQuestions([]);
+    setOriginalQuestions([]);
     setConfig({
       questionCount: 0,
       timerEnabled: false,
@@ -159,7 +164,9 @@ export const QuizProvider = ({ children }) => {
 
   // Retake quiz (go back to configuration with same questions)
   const retakeQuiz = () => {
-    setPhase('configuration');
+    // Restore original questions for reconfiguration
+    setQuestions(originalQuestions);
+    setConfig(prev => ({ ...prev, questionCount: originalQuestions.length }));
     setExamState({
       currentQuestionIndex: 0,
       userAnswers: [],
@@ -168,6 +175,7 @@ export const QuizProvider = ({ children }) => {
       endTime: null,
     });
     setResults(null);
+    setPhase('configuration');
   };
 
   const value = {

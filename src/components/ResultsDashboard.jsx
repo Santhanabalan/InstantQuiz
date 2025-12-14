@@ -8,6 +8,11 @@ export const ResultsDashboard = () => {
   const [filter, setFilter] = useState('all'); // 'all' | 'correct' | 'incorrect' | 'marked'
   const [expandedQuestions, setExpandedQuestions] = useState(new Set());
 
+  // Guard against null results
+  if (!results) {
+    return null;
+  }
+
   const toggleExpand = (index) => {
     const newExpanded = new Set(expandedQuestions);
     if (newExpanded.has(index)) {
