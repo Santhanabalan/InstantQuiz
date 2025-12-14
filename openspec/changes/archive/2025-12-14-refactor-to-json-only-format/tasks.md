@@ -33,7 +33,7 @@
 
 ## Phase 6: Add Explanation Display (Optional Enhancement)
 - [ ] Update ExamInterface to optionally show explanations after answering
-- [ ] Update ResultsDashboard to show explanations in question review
+- [x] Update ResultsDashboard to show explanations in question review
 - [ ] Add UI toggle to show/hide explanations
 - [ ] Style explanation section appropriately
 
@@ -43,10 +43,10 @@
 - [ ] Add converter to project (as separate utility or web tool)
 
 ## Phase 8: Documentation
-- [ ] Update README with JSON-only instructions
-- [ ] Add JSON format specification section
-- [ ] Create migration guide for CSV users
-- [ ] Add examples for different question types
+- [x] Update README with JSON-only instructions
+- [x] Add JSON format specification section
+- [x] Create migration guide for CSV users
+- [x] Add examples for different question types
 - [ ] Update any screenshots or demos
 
 ## Phase 9: Testing

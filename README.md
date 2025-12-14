@@ -1,6 +1,6 @@
 # InstantQuiz
 
-InstantQuiz is a modern, client-side quiz application that allows you to upload CSV files containing questions and generate interactive practice exams instantly. Built with React, Vite, and Tailwind CSS.
+InstantQuiz is a modern, client-side quiz application that allows you to upload JSON files containing questions and generate interactive practice exams instantly. Built with React, Vite, and Tailwind CSS.
 
 ## 🚀 Live Demo
 
@@ -10,11 +10,14 @@ The application is automatically deployed to GitHub Pages on every push to the m
 
 ## Features
 
-- **CSV Upload**: Drag-and-drop CSV file upload with auto-detection of various formats
+- **JSON Upload**: Drag-and-drop JSON file upload with validation
+- **Rich Question Metadata**: Support for explanations, difficulty levels, categories, and tags
+- **Multiple Question Types**: Single-choice, multi-select, and fill-in-the-blank questions
 - **Quiz Configuration**: Customize question count, timer, passing score, and randomization options
 - **Interactive Exam**: Distraction-free quiz-taking experience with progress tracking
-- **Analytics Dashboard**: Detailed results with score visualization and question review
+- **Analytics Dashboard**: Detailed results with score visualization, question review, and explanations
 - **Responsive Design**: Mobile-first design that works on all devices
+- **Dark Mode**: Automatic light/dark theme support
 - **Smooth Animations**: Polished transitions using Framer Motion
 
 ## Getting Started
@@ -45,30 +48,106 @@ npm run build
 npm run preview
 ```
 
-## CSV Format
+## JSON Format
 
-Your CSV file should contain questions with the following structure:
+InstantQuiz uses JSON format for quiz data. This provides a clean, extensible structure with support for rich metadata.
 
-```csv
-Question Text,Option A,Option B,Option C,Option D,Correct Answer
-What is the capital of France?,London,Berlin,Paris,Madrid,C
-Which planet is known as the Red Planet?,Venus,Mars,Jupiter,Saturn,B
+### Basic Structure
+
+```json
+{
+  "questions": [
+    {
+      "question": "What is React?",
+      "type": "single-choice",
+      "options": ["A JavaScript library", "A CSS framework", "A database"],
+      "correctAnswers": [0]
+    }
+  ]
+}
 ```
 
-### CSV Requirements
+### Question Types
 
-- **6 columns**: Question Text, Option A, Option B, Option C, Option D, Correct Answer
-- **Header row** (optional): The app auto-detects headers
-- **Correct Answer**: Use A, B, C, or D (case-insensitive)
-- **Format**: Standard CSV with comma separators
+#### 1. Single-Choice
+One correct answer from multiple options.
 
-### Example CSV
+```json
+{
+  "question": "What is the capital of France?",
+  "type": "single-choice",
+  "options": ["London", "Berlin", "Paris", "Madrid"],
+  "correctAnswers": [0]
+}
+```
 
-An example CSV file is provided at `/public/example-quiz.csv` with 20 sample questions.
+#### 2. Multi-Select
+Multiple correct answers from options.
+
+```json
+{
+  "question": "Which are programming languages?",
+  "type": "multi-select",
+  "options": ["Python", "HTML", "JavaScript", "CSS"],
+  "correctAnswers": [0, 2]
+}
+```
+
+#### 3. Fill-in-the-Blank
+Text input with multiple acceptable answers.
+
+```json
+{
+  "question": "What does HTML stand for?",
+  "type": "fill-in-blank",
+  "correctAnswers": ["HyperText Markup Language", "Hypertext Markup Language"]
+}
+```
+
+### Enhanced Features (Optional)
+
+Add rich metadata to your questions:
+
+```json
+{
+  "id": "react-001",
+  "question": "What is React?",
+  "type": "single-choice",
+  "options": ["A JavaScript library", "A CSS framework"],
+  "correctAnswers": [0],
+  "explanation": "React is a JavaScript library for building user interfaces, maintained by Meta.",
+  "metadata": {
+    "difficulty": "easy",
+    "category": "React Basics",
+    "tags": ["javascript", "react", "fundamentals"]
+  }
+}
+```
+
+#### Optional Fields:
+- **`id`**: Unique identifier for the question
+- **`explanation`**: Educational feedback shown after answering
+- **`metadata.difficulty`**: Question difficulty (`easy`, `medium`, `hard`)
+- **`metadata.category`**: Question category for organization
+- **`metadata.tags`**: Array of tags for future filtering
+
+### Complete Example
+
+See [/public/example-quiz.json](public/example-quiz.json) for a complete example with all question types and optional fields.
+
+### JSON Requirements
+
+- **Required**: `questions` array
+- **Each question must have**:
+  - `question` (string)
+  - `type` (`single-choice`, `multi-select`, or `fill-in-blank`)
+  - `correctAnswers` (array of indices for MC, array of strings for fill-in-blank)
+  - `options` (array with 2-5 items, required for single-choice and multi-select)
 
 ## How to Use
 
-1. **Upload CSV**: Drag and drop your CSV file or click to browse
+1. **Upload JSON**: Drag and drop your JSON file or click to browse
+   - Click "Download Example" to get a sample quiz file
 2. **Configure Quiz**: Set your preferences:
    - Number of questions
    - Enable/disable timer
@@ -78,19 +157,43 @@ An example CSV file is provided at `/public/example-quiz.csv` with 20 sample que
    - Mark questions for review
    - Navigate between questions
    - Track your progress
+   - Keyboard shortcuts (Arrow keys for navigation, A-E for answers)
 4. **View Results**: See your score and review all questions
    - Filter by correct/incorrect/marked
-   - See correct answers for wrong questions
+   - See correct answers and explanations
    - Retake quiz or upload new file
 
 ## Technologies
 
 - **React 19** - UI framework
-- **Vite** - Build tool and dev server
+- **Vite 7** - Build tool and dev server
 - **Tailwind CSS v4** - Styling
 - **Framer Motion** - Animations
-- **PapaParse** - CSV parsing
 - **Lucide React** - Icons
+
+## Project Structure
+
+```
+src/
+├── components/         # React components
+│   ├── ExamInterface.jsx        # Quiz taking interface
+│   ├── FileUpload.jsx           # JSON upload with validation
+│   ├── QuizConfiguration.jsx    # Quiz settings
+│   ├── ResultsDashboard.jsx     # Results and review
+│   ├── ProgressBar.jsx          # Question progress
+│   ├── Timer.jsx                # Countdown timer
+│   ├── ThemeToggle.jsx          # Light/dark mode
+│   └── Toast.jsx                # Notifications
+├── contexts/          # React contexts
+│   ├── QuizContext.jsx          # Quiz state management
+│   └── ThemeContext.jsx         # Theme state
+├── utils/             # Utility functions
+├── App.jsx            # Main app component
+└── main.jsx           # Entry point
+
+public/
+└── example-quiz.json  # Sample quiz with all features
+```
 
 ## Deployment
 

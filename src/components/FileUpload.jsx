@@ -251,7 +251,7 @@ export const FileUpload = ({ onToast }) => {
                   <summary className="cursor-pointer font-medium text-blue-900 dark:text-blue-100 hover:text-blue-700 dark:hover:text-blue-300">
                     View Example JSON Structure
                   </summary>
-                  <pre className="mt-2 text-xs bg-white dark:bg-gray-800 p-3 rounded border border-blue-200 dark:border-blue-700 overflow-x-auto">
+                  <pre className="mt-2 text-xs text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-800 p-3 rounded border border-blue-200 dark:border-blue-700 overflow-x-auto">
 {`{
   "questions": [
     {
