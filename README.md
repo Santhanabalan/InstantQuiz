@@ -2,6 +2,12 @@
 
 InstantQuiz is a modern, client-side quiz application that allows you to upload CSV files containing questions and generate interactive practice exams instantly. Built with React, Vite, and Tailwind CSS.
 
+## 🚀 Live Demo
+
+**[Try InstantQuiz](https://santhanabalan.github.io/InstantQuiz/)**
+
+The application is automatically deployed to GitHub Pages on every push to the main branch.
+
 ## Features
 
 - **CSV Upload**: Drag-and-drop CSV file upload with auto-detection of various formats
@@ -85,6 +91,22 @@ An example CSV file is provided at `/public/example-quiz.csv` with 20 sample que
 - **Framer Motion** - Animations
 - **PapaParse** - CSV parsing
 - **Lucide React** - Icons
+
+## Deployment
+
+The application is automatically deployed to GitHub Pages using GitHub Actions.
+
+### Deployment Process
+
+1. Push changes to the `main` branch
+2. GitHub Actions workflow automatically:
+   - Builds the application
+   - Deploys to GitHub Pages
+3. Live site updates within a few minutes
+
+### Manual Deployment
+
+If needed, you can trigger a manual deployment from the Actions tab in GitHub.
 
 ## License
 
