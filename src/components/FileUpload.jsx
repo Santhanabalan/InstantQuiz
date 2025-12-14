@@ -60,22 +60,64 @@ export const FileUpload = ({ onToast }) => {
               typeof cell === 'string' ? cell.trim() : String(cell || '')
             );
 
-            // Validate correct answer
-            const normalizedAnswer = correctAnswer.toUpperCase();
-            if (!['A', 'B', 'C', 'D'].includes(normalizedAnswer)) {
-              errors.push(`Row ${rowNum}: Invalid correct answer "${correctAnswer}". Must be A, B, C, or D`);
+            // Validate question text
+            if (!questionText) {
+              errors.push(`Row ${rowNum}: Question text is required`);
               return;
             }
 
-            questions.push({
-              id: `q-${Date.now()}-${index}`,
-              questionText,
-              optionA,
-              optionB,
-              optionC,
-              optionD,
-              correctAnswer: normalizedAnswer,
+            // Detect fill-in-the-blank questions
+            // If all options are empty or contain "blank" (case-insensitive), it's a fill-in-the-blank question
+            const isFillInBlank = [optionA, optionB, optionC, optionD].every(opt => {
+              const normalized = (opt || '').toLowerCase().trim();
+              return normalized === '' || normalized === 'blank';
             });
+
+            if (isFillInBlank) {
+              // Fill-in-the-blank question
+              // correctAnswer can be pipe-separated for multiple acceptable answers
+              const acceptableAnswers = correctAnswer
+                .split('|')
+                .map(ans => ans.trim())
+                .filter(ans => ans.length > 0);
+
+              if (acceptableAnswers.length === 0) {
+                errors.push(`Row ${rowNum}: Fill-in-blank question must have at least one acceptable answer`);
+                return;
+              }
+
+              questions.push({
+                id: `q-${Date.now()}-${index}`,
+                questionText,
+                type: 'fill-in-blank',
+                acceptableAnswers,
+              });
+            } else {
+              // Multiple choice question
+              // Validate all options are present
+              if (!optionA || !optionB || !optionC || !optionD) {
+                errors.push(`Row ${rowNum}: All options (A, B, C, D) are required for multiple choice questions`);
+                return;
+              }
+
+              // Validate correct answer
+              const normalizedAnswer = correctAnswer.toUpperCase();
+              if (!['A', 'B', 'C', 'D'].includes(normalizedAnswer)) {
+                errors.push(`Row ${rowNum}: Invalid correct answer "${correctAnswer}". Must be A, B, C, or D for multiple choice`);
+                return;
+              }
+
+              questions.push({
+                id: `q-${Date.now()}-${index}`,
+                questionText,
+                type: 'multiple-choice',
+                optionA,
+                optionB,
+                optionC,
+                optionD,
+                correctAnswer: normalizedAnswer,
+              });
+            }
           });
 
           if (errors.length > 0) {

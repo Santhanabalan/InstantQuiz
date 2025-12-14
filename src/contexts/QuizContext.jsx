@@ -100,24 +100,51 @@ export const QuizProvider = ({ children }) => {
   // Submit quiz and calculate results
   const submitQuiz = () => {
     const endTime = Date.now();
-    const questionResults = questions.map((q, index) => ({
-      questionIndex: index,
-      questionText: q.questionText,
-      options: {
-        A: q.optionA,
-        B: q.optionB,
-        C: q.optionC,
-        D: q.optionD,
-      },
-      userAnswer: examState.userAnswers[index],
-      correctAnswer: q.correctAnswer,
-      isCorrect: examState.userAnswers[index] === q.correctAnswer,
-      wasMarkedForReview: examState.markedForReview.has(index),
-    }));
+    const questionResults = questions.map((q, index) => {
+      const userAnswer = examState.userAnswers[index];
+      let isCorrect = false;
+
+      if (q.type === 'fill-in-blank') {
+        // Fill-in-blank validation (case-insensitive, trimmed)
+        const normalizedUserAnswer = (userAnswer || '').trim().toLowerCase();
+        isCorrect = q.acceptableAnswers.some(
+          acceptable => acceptable.trim().toLowerCase() === normalizedUserAnswer
+        );
+
+        return {
+          questionIndex: index,
+          questionText: q.questionText,
+          type: 'fill-in-blank',
+          acceptableAnswers: q.acceptableAnswers,
+          userAnswer: userAnswer,
+          isCorrect,
+          wasMarkedForReview: examState.markedForReview.has(index),
+        };
+      } else {
+        // Multiple choice validation
+        isCorrect = userAnswer === q.correctAnswer;
+
+        return {
+          questionIndex: index,
+          questionText: q.questionText,
+          type: 'multiple-choice',
+          options: {
+            A: q.optionA,
+            B: q.optionB,
+            C: q.optionC,
+            D: q.optionD,
+          },
+          userAnswer,
+          correctAnswer: q.correctAnswer,
+          isCorrect,
+          wasMarkedForReview: examState.markedForReview.has(index),
+        };
+      }
+    });
 
     const correctCount = questionResults.filter(r => r.isCorrect).length;
-    const incorrectCount = questionResults.filter(r => !r.isCorrect && r.userAnswer !== null).length;
-    const unansweredCount = questionResults.filter(r => r.userAnswer === null).length;
+    const incorrectCount = questionResults.filter(r => !r.isCorrect && r.userAnswer !== null && r.userAnswer !== '').length;
+    const unansweredCount = questionResults.filter(r => r.userAnswer === null || r.userAnswer === '').length;
     const score = Math.round((correctCount / questions.length) * 100);
     const passed = score >= config.passingScore;
     const timeSpent = config.timerEnabled ? Math.floor((endTime - examState.startTime) / 1000) : null;

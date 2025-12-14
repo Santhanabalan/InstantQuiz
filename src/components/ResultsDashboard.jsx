@@ -241,13 +241,13 @@ const FilterButton = ({ active, onClick, children, count, color = 'indigo' }) =>
 const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
   const borderColor = result.isCorrect
     ? 'border-l-green-500'
-    : result.userAnswer === null
+    : (result.userAnswer === null || result.userAnswer === '')
     ? 'border-l-slate-400'
     : 'border-l-red-500';
 
   const icon = result.isCorrect ? (
     <CheckCircle2 className="w-5 h-5 text-green-600" />
-  ) : result.userAnswer === null ? (
+  ) : (result.userAnswer === null || result.userAnswer === '') ? (
     <MinusCircle className="w-5 h-5 text-slate-500" />
   ) : (
     <XCircle className="w-5 h-5 text-red-600" />
@@ -266,6 +266,11 @@ const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
               <span className="text-sm font-medium text-slate-500 dark:text-gray-400">
                 Question {result.questionIndex + 1}
               </span>
+              {result.type === 'fill-in-blank' && (
+                <span className="text-xs px-2 py-1 rounded bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-medium">
+                  Fill-in-blank
+                </span>
+              )}
               {result.wasMarkedForReview && (
                 <Flag className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-current" />
               )}
@@ -289,37 +294,85 @@ const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
           exit={{ height: 0, opacity: 0 }}
           className="border-t border-slate-200 dark:border-gray-700 p-4 bg-slate-50 dark:bg-gray-700/50"
         >
-          <div className="space-y-2">
-            {['A', 'B', 'C', 'D'].map((option) => {
-              const isUserAnswer = result.userAnswer === option;
-              const isCorrectAnswer = result.correctAnswer === option;
-
-              return (
-                <div
-                  key={option}
-                  className={`p-3 rounded-md border ${
-                    isCorrectAnswer
-                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                      : isUserAnswer
-                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                      : 'border-slate-200 dark:border-gray-600 bg-white dark:bg-gray-800'
-                  }`}
-                >
-                  <div className="flex items-start gap-2">
-                    <span className="font-semibold text-slate-700 dark:text-gray-300">{option}.</span>
-                    <span className={isUserAnswer && !isCorrectAnswer ? 'line-through text-slate-500 dark:text-gray-400' : 'text-slate-900 dark:text-gray-100'}>
-                      {result.options[option]}
+          {result.type === 'fill-in-blank' ? (
+            /* Fill-in-blank result display */
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium text-slate-600 dark:text-gray-400 block mb-1">
+                  Your answer:
+                </label>
+                <div className={`p-3 rounded-md border ${
+                  result.isCorrect
+                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                    : (result.userAnswer === null || result.userAnswer === '')
+                    ? 'border-slate-200 dark:border-gray-600 bg-white dark:bg-gray-800'
+                    : 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                }`}>
+                  {result.userAnswer ? (
+                    <span className={result.isCorrect ? 'text-slate-900 dark:text-gray-100' : 'text-red-700 dark:text-red-300 line-through'}>
+                      {result.userAnswer}
                     </span>
-                    {isCorrectAnswer && (
-                      <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 ml-auto flex-shrink-0" />
-                    )}
+                  ) : (
+                    <span className="text-slate-500 dark:text-gray-400 italic">Not answered</span>
+                  )}
+                  {result.isCorrect && (
+                    <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 inline-block ml-2" />
+                  )}
+                </div>
+              </div>
+              {!result.isCorrect && (
+                <div>
+                  <label className="text-sm font-medium text-slate-600 dark:text-gray-400 block mb-1">
+                    Acceptable answer{result.acceptableAnswers.length > 1 ? 's' : ''}:
+                  </label>
+                  <div className="space-y-2">
+                    {result.acceptableAnswers.map((answer, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3 rounded-md border border-green-500 bg-green-50 dark:bg-green-900/20"
+                      >
+                        <span className="text-slate-900 dark:text-gray-100">{answer}</span>
+                        <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 inline-block ml-2" />
+                      </div>
+                    ))}
                   </div>
                 </div>
-              );
-            })}
-          </div>
-          {result.userAnswer === null && (
-            <p className="mt-3 text-sm text-slate-600 dark:text-gray-400 italic">You did not answer this question</p>
+              )}
+            </div>
+          ) : (
+            /* Multiple choice result display */
+            <div className="space-y-2">
+              {['A', 'B', 'C', 'D'].map((option) => {
+                const isUserAnswer = result.userAnswer === option;
+                const isCorrectAnswer = result.correctAnswer === option;
+
+                return (
+                  <div
+                    key={option}
+                    className={`p-3 rounded-md border ${
+                      isCorrectAnswer
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                        : isUserAnswer
+                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                        : 'border-slate-200 dark:border-gray-600 bg-white dark:bg-gray-800'
+                    }`}
+                  >
+                    <div className="flex items-start gap-2">
+                      <span className="font-semibold text-slate-700 dark:text-gray-300">{option}.</span>
+                      <span className={isUserAnswer && !isCorrectAnswer ? 'line-through text-slate-500 dark:text-gray-400' : 'text-slate-900 dark:text-gray-100'}>
+                        {result.options[option]}
+                      </span>
+                      {isCorrectAnswer && (
+                        <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 ml-auto flex-shrink-0" />
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              {result.userAnswer === null && (
+                <p className="mt-3 text-sm text-slate-600 dark:text-gray-400 italic">You did not answer this question</p>
+              )}
+            </div>
           )}
         </motion.div>
       )}

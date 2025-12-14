@@ -37,6 +37,10 @@ export const ExamInterface = () => {
     setAnswer(examState.currentQuestionIndex, option);
   };
 
+  const handleTextInput = (text) => {
+    setAnswer(examState.currentQuestionIndex, text);
+  };
+
   const handleSubmit = () => {
     setShowConfirmation(true);
   };
@@ -54,17 +58,22 @@ export const ExamInterface = () => {
     const handleKeyPress = (e) => {
       if (showConfirmation) return;
       
+      // Don't trigger shortcuts if typing in a text input
+      if (currentQuestion.type === 'fill-in-blank' && e.target.tagName === 'INPUT') return;
+      
       if (e.key === 'ArrowLeft') handlePrevious();
       else if (e.key === 'ArrowRight') handleNext();
-      else if (['a', 'A'].includes(e.key)) handleAnswerSelect('A');
-      else if (['b', 'B'].includes(e.key)) handleAnswerSelect('B');
-      else if (['c', 'C'].includes(e.key)) handleAnswerSelect('C');
-      else if (['d', 'D'].includes(e.key)) handleAnswerSelect('D');
+      else if (currentQuestion.type !== 'fill-in-blank') {
+        if (['a', 'A'].includes(e.key)) handleAnswerSelect('A');
+        else if (['b', 'B'].includes(e.key)) handleAnswerSelect('B');
+        else if (['c', 'C'].includes(e.key)) handleAnswerSelect('C');
+        else if (['d', 'D'].includes(e.key)) handleAnswerSelect('D');
+      }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [examState.currentQuestionIndex, showConfirmation]);
+  }, [examState.currentQuestionIndex, showConfirmation, currentQuestion.type]);
 
   const slideVariants = {
     enter: (direction) => ({
@@ -144,35 +153,53 @@ export const ExamInterface = () => {
                 </div>
 
                 <div className="space-y-3">
-                  {['A', 'B', 'C', 'D'].map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => handleAnswerSelect(option)}
-                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                        currentAnswer === option
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
-                          : 'border-slate-200 dark:border-gray-600 hover:border-slate-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700/50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                            currentAnswer === option
-                              ? 'border-indigo-600 bg-indigo-600'
-                              : 'border-slate-300 dark:border-gray-500'
-                          }`}
-                        >
-                          {currentAnswer === option && (
-                            <div className="w-3 h-3 rounded-full bg-white" />
-                          )}
+                  {currentQuestion.type === 'fill-in-blank' ? (
+                    /* Fill-in-the-blank input */
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                        Type your answer:
+                      </label>
+                      <input
+                        type="text"
+                        value={currentAnswer || ''}
+                        onChange={(e) => handleTextInput(e.target.value)}
+                        placeholder="Type your answer here..."
+                        className="w-full p-4 rounded-lg border-2 border-slate-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-slate-900 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors"
+                        autoFocus
+                      />
+                    </div>
+                  ) : (
+                    /* Multiple choice options */
+                    ['A', 'B', 'C', 'D'].map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => handleAnswerSelect(option)}
+                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                          currentAnswer === option
+                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+                            : 'border-slate-200 dark:border-gray-600 hover:border-slate-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                              currentAnswer === option
+                                ? 'border-indigo-600 bg-indigo-600'
+                                : 'border-slate-300 dark:border-gray-500'
+                            }`}
+                          >
+                            {currentAnswer === option && (
+                              <div className="w-3 h-3 rounded-full bg-white" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-semibold text-slate-700 dark:text-gray-300 mr-2">{option}.</span>
+                            <span className="text-slate-900 dark:text-gray-100">{currentQuestion[`option${option}`]}</span>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <span className="font-semibold text-slate-700 dark:text-gray-300 mr-2">{option}.</span>
-                          <span className="text-slate-900 dark:text-gray-100">{currentQuestion[`option${option}`]}</span>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
             </motion.div>
