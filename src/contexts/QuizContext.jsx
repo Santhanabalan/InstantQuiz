@@ -103,6 +103,7 @@ export const QuizProvider = ({ children }) => {
     const questionResults = questions.map((q, index) => {
       const userAnswer = examState.userAnswers[index];
       let isCorrect = false;
+      let partialScore = 0;
 
       if (q.type === 'fill-in-blank') {
         // Fill-in-blank validation (case-insensitive, trimmed)
@@ -118,33 +119,59 @@ export const QuizProvider = ({ children }) => {
           acceptableAnswers: q.acceptableAnswers,
           userAnswer: userAnswer,
           isCorrect,
+          partialScore: isCorrect ? 1 : 0,
           wasMarkedForReview: examState.markedForReview.has(index),
         };
-      } else {
-        // Multiple choice validation
-        isCorrect = userAnswer === q.correctAnswer;
+      } else if (q.type === 'multi-select') {
+        // Multi-select validation
+        const userAnswers = Array.isArray(userAnswer) ? userAnswer.sort() : [];
+        const correctAnswers = q.correctAnswers.sort();
+        
+        // All-or-nothing scoring (can be made configurable later)
+        isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+        
+        // Partial credit calculation (for future use)
+        if (userAnswers.length > 0 && correctAnswers.length > 0) {
+          const correctSelections = userAnswers.filter(ans => correctAnswers.includes(ans)).length;
+          const incorrectSelections = userAnswers.filter(ans => !correctAnswers.includes(ans)).length;
+          const missedSelections = correctAnswers.filter(ans => !userAnswers.includes(ans)).length;
+          
+          // Partial score: (correct - incorrect) / total correct, clamped to 0-1
+          partialScore = Math.max(0, (correctSelections - incorrectSelections) / correctAnswers.length);
+        }
 
         return {
           questionIndex: index,
           questionText: q.questionText,
-          type: 'multiple-choice',
-          options: {
-            A: q.optionA,
-            B: q.optionB,
-            C: q.optionC,
-            D: q.optionD,
-          },
-          userAnswer,
-          correctAnswer: q.correctAnswer,
+          type: 'multi-select',
+          options: q.options,
+          userAnswer: userAnswers,
+          correctAnswers: q.correctAnswers,
           isCorrect,
+          partialScore: isCorrect ? 1 : 0, // Use all-or-nothing for now
+          wasMarkedForReview: examState.markedForReview.has(index),
+        };
+      } else {
+        // Single-choice validation
+        isCorrect = userAnswer === q.correctAnswers[0];
+
+        return {
+          questionIndex: index,
+          questionText: q.questionText,
+          type: 'single-choice',
+          options: q.options,
+          userAnswer,
+          correctAnswers: q.correctAnswers,
+          isCorrect,
+          partialScore: isCorrect ? 1 : 0,
           wasMarkedForReview: examState.markedForReview.has(index),
         };
       }
     });
 
     const correctCount = questionResults.filter(r => r.isCorrect).length;
-    const incorrectCount = questionResults.filter(r => !r.isCorrect && r.userAnswer !== null && r.userAnswer !== '').length;
-    const unansweredCount = questionResults.filter(r => r.userAnswer === null || r.userAnswer === '').length;
+    const incorrectCount = questionResults.filter(r => !r.isCorrect && r.userAnswer !== null && r.userAnswer !== '' && (!Array.isArray(r.userAnswer) || r.userAnswer.length > 0)).length;
+    const unansweredCount = questionResults.filter(r => r.userAnswer === null || r.userAnswer === '' || (Array.isArray(r.userAnswer) && r.userAnswer.length === 0)).length;
     const score = Math.round((correctCount / questions.length) * 100);
     const passed = score >= config.passingScore;
     const timeSpent = config.timerEnabled ? Math.floor((endTime - examState.startTime) / 1000) : null;
@@ -235,38 +262,32 @@ function shuffleArray(array) {
 }
 
 function shuffleOptions(question) {
-  // Get the correct answer value before shuffling
-  const correctOptionValue = question[`option${question.correctAnswer}`];
-  
-  // Create array of options with their keys
-  const options = [
-    { key: 'A', value: question.optionA },
-    { key: 'B', value: question.optionB },
-    { key: 'C', value: question.optionC },
-    { key: 'D', value: question.optionD },
-  ];
-  
-  // Shuffle the options
-  const shuffled = shuffleArray(options);
-  
-  // Find the new position (index) of the correct answer in shuffled array
-  const correctAnswerIndex = shuffled.findIndex(opt => opt.value === correctOptionValue);
-  
-  // If we can't find the correct answer (shouldn't happen), return original question
-  if (correctAnswerIndex === -1) {
-    console.error('Failed to find correct answer after shuffle:', question);
+  // Skip if not MCQ or if already fill-in-blank
+  if (question.type === 'fill-in-blank' || !question.options) {
     return question;
   }
+
+  // Create array of options with their indices
+  const optionsWithIndices = question.options.map((value, index) => ({
+    letter: String.fromCharCode(65 + index), // A, B, C, D, E
+    value,
+    index,
+  }));
   
-  // Map index to letter: 0='A', 1='B', 2='C', 3='D'
-  const newCorrectAnswer = ['A', 'B', 'C', 'D'][correctAnswerIndex];
+  // Shuffle the options
+  const shuffled = shuffleArray(optionsWithIndices);
+  
+  // Map old correct answers to new positions
+  const newCorrectAnswers = question.correctAnswers.map(oldLetter => {
+    const oldIndex = oldLetter.charCodeAt(0) - 65;
+    const originalValue = question.options[oldIndex];
+    const newIndex = shuffled.findIndex(opt => opt.value === originalValue);
+    return String.fromCharCode(65 + newIndex);
+  });
   
   return {
     ...question,
-    optionA: shuffled[0].value,
-    optionB: shuffled[1].value,
-    optionC: shuffled[2].value,
-    optionD: shuffled[3].value,
-    correctAnswer: newCorrectAnswer,
+    options: shuffled.map(opt => opt.value),
+    correctAnswers: newCorrectAnswers,
   };
 }

@@ -239,15 +239,19 @@ const FilterButton = ({ active, onClick, children, count, color = 'indigo' }) =>
 };
 
 const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
+  const isAnswered = result.type === 'multi-select'
+    ? (Array.isArray(result.userAnswer) && result.userAnswer.length > 0)
+    : (result.userAnswer !== null && result.userAnswer !== '');
+  
   const borderColor = result.isCorrect
     ? 'border-l-green-500'
-    : (result.userAnswer === null || result.userAnswer === '')
+    : !isAnswered
     ? 'border-l-slate-400'
     : 'border-l-red-500';
 
   const icon = result.isCorrect ? (
     <CheckCircle2 className="w-5 h-5 text-green-600" />
-  ) : (result.userAnswer === null || result.userAnswer === '') ? (
+  ) : !isAnswered ? (
     <MinusCircle className="w-5 h-5 text-slate-500" />
   ) : (
     <XCircle className="w-5 h-5 text-red-600" />
@@ -342,34 +346,81 @@ const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
           ) : (
             /* Multiple choice result display */
             <div className="space-y-2">
-              {['A', 'B', 'C', 'D'].map((option) => {
-                const isUserAnswer = result.userAnswer === option;
-                const isCorrectAnswer = result.correctAnswer === option;
+              {result.type === 'multi-select' && (
+                <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                  Multiple answers expected
+                </p>
+              )}
+              {result.options.map((optionText, index) => {
+                const optionLetter = String.fromCharCode(65 + index); // A, B, C, D, E
+                const isUserAnswer = Array.isArray(result.userAnswer)
+                  ? result.userAnswer.includes(optionLetter)
+                  : result.userAnswer === optionLetter;
+                const isCorrectAnswer = result.correctAnswers.includes(optionLetter);
+                const isCorrectSelection = isUserAnswer && isCorrectAnswer;
+                const isIncorrectSelection = isUserAnswer && !isCorrectAnswer;
+                const isMissedCorrect = !isUserAnswer && isCorrectAnswer;
 
                 return (
                   <div
-                    key={option}
+                    key={optionLetter}
                     className={`p-3 rounded-md border ${
                       isCorrectAnswer
                         ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                        : isUserAnswer
+                        : isIncorrectSelection
                         ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
                         : 'border-slate-200 dark:border-gray-600 bg-white dark:bg-gray-800'
                     }`}
                   >
                     <div className="flex items-start gap-2">
-                      <span className="font-semibold text-slate-700 dark:text-gray-300">{option}.</span>
-                      <span className={isUserAnswer && !isCorrectAnswer ? 'line-through text-slate-500 dark:text-gray-400' : 'text-slate-900 dark:text-gray-100'}>
-                        {result.options[option]}
+                      {/* Checkbox or radio indicator */}
+                      {result.type === 'multi-select' ? (
+                        <div
+                          className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                            isUserAnswer
+                              ? isCorrectAnswer
+                                ? 'border-green-600 bg-green-600'
+                                : 'border-red-600 bg-red-600'
+                              : isCorrectAnswer
+                              ? 'border-green-600'
+                              : 'border-slate-300 dark:border-gray-500'
+                          }`}
+                        >
+                          {isUserAnswer && (
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      ) : (
+                        <div
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                            isUserAnswer
+                              ? isCorrectAnswer
+                                ? 'border-green-600 bg-green-600'
+                                : 'border-red-600 bg-red-600'
+                              : isCorrectAnswer
+                              ? 'border-green-600'
+                              : 'border-slate-300 dark:border-gray-500'
+                          }`}
+                        >
+                          {isUserAnswer && (
+                            <div className="w-2.5 h-2.5 rounded-full bg-white" />
+                          )}
+                        </div>
+                      )}
+                      <span className="font-semibold text-slate-700 dark:text-gray-300">{optionLetter}.</span>
+                      <span className={isIncorrectSelection ? 'line-through text-slate-500 dark:text-gray-400 flex-1' : 'text-slate-900 dark:text-gray-100 flex-1'}>
+                        {optionText}
                       </span>
                       {isCorrectAnswer && (
-                        <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 ml-auto flex-shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />
                       )}
                     </div>
                   </div>
                 );
               })}
-              {result.userAnswer === null && (
+              {((Array.isArray(result.userAnswer) && result.userAnswer.length === 0) || result.userAnswer === null) && (
                 <p className="mt-3 text-sm text-slate-600 dark:text-gray-400 italic">You did not answer this question</p>
               )}
             </div>

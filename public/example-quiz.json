@@ -1,0 +1,123 @@
+{
+  "questions": [
+    {
+      "question": "What is React?",
+      "type": "single-choice",
+      "options": [
+        "A JavaScript library",
+        "A CSS framework",
+        "A database",
+        "A web server"
+      ],
+      "correctAnswers": [0]
+    },
+    {
+      "question": "Which hooks manage state in React?",
+      "type": "multi-select",
+      "options": [
+        "useState",
+        "useEffect",
+        "useContext",
+        "useReducer"
+      ],
+      "correctAnswers": [0, 3]
+    },
+    {
+      "question": "What does JSX stand for?",
+      "type": "single-choice",
+      "options": [
+        "JavaScript XML",
+        "Java Syntax Extension"
+      ],
+      "correctAnswers": [0]
+    },
+    {
+      "question": "Which are valid HTTP methods?",
+      "type": "multi-select",
+      "options": [
+        "GET",
+        "POST",
+        "DELETE",
+        "PUT",
+        "PATCH"
+      ],
+      "correctAnswers": [0, 1, 2, 3, 4]
+    },
+    {
+      "question": "What is a functional component?",
+      "type": "fill-in-blank",
+      "correctAnswers": [
+        "A function that returns JSX",
+        "Function component",
+        "A function returning JSX"
+      ]
+    },
+    {
+      "question": "What is Redux used for?",
+      "type": "fill-in-blank",
+      "correctAnswers": [
+        "State management",
+        "Managing state",
+        "Global state"
+      ]
+    },
+    {
+      "question": "Which are JavaScript data types?",
+      "type": "multi-select",
+      "options": [
+        "Number",
+        "String",
+        "Boolean"
+      ],
+      "correctAnswers": [0, 1, 2]
+    },
+    {
+      "question": "What is the virtual DOM?",
+      "type": "single-choice",
+      "options": [
+        "An in-memory representation",
+        "A type of database"
+      ],
+      "correctAnswers": [0]
+    },
+    {
+      "question": "Which libraries are for styling?",
+      "type": "multi-select",
+      "options": [
+        "Tailwind CSS",
+        "Bootstrap",
+        "Material-UI",
+        "D3.js",
+        "Chart.js"
+      ],
+      "correctAnswers": [0, 1, 2]
+    },
+    {
+      "question": "What is JSX syntax sugar for?",
+      "type": "fill-in-blank",
+      "correctAnswers": [
+        "React.createElement",
+        "createElement"
+      ]
+    },
+    {
+      "question": "What does npm stand for?",
+      "type": "single-choice",
+      "options": [
+        "Node Package Manager",
+        "New Programming Method"
+      ],
+      "correctAnswers": [0]
+    },
+    {
+      "question": "Which are React lifecycle methods?",
+      "type": "multi-select",
+      "options": [
+        "componentDidMount",
+        "render",
+        "componentWillUnmount"
+      ],
+      "correctAnswers": [0, 1, 2]
+    }
+  ]
+}

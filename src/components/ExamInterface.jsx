@@ -37,6 +37,15 @@ export const ExamInterface = () => {
     setAnswer(examState.currentQuestionIndex, option);
   };
 
+  const handleMultiSelect = (option) => {
+    const currentAnswers = Array.isArray(currentAnswer) ? currentAnswer : [];
+    const newAnswers = currentAnswers.includes(option)
+      ? currentAnswers.filter(ans => ans !== option) // Deselect
+      : [...currentAnswers, option]; // Select
+    
+    setAnswer(examState.currentQuestionIndex, newAnswers.length > 0 ? newAnswers : null);
+  };
+
   const handleTextInput = (text) => {
     setAnswer(examState.currentQuestionIndex, text);
   };
@@ -63,17 +72,26 @@ export const ExamInterface = () => {
       
       if (e.key === 'ArrowLeft') handlePrevious();
       else if (e.key === 'ArrowRight') handleNext();
-      else if (currentQuestion.type !== 'fill-in-blank') {
-        if (['a', 'A'].includes(e.key)) handleAnswerSelect('A');
-        else if (['b', 'B'].includes(e.key)) handleAnswerSelect('B');
-        else if (['c', 'C'].includes(e.key)) handleAnswerSelect('C');
-        else if (['d', 'D'].includes(e.key)) handleAnswerSelect('D');
+      else if (currentQuestion.type === 'multi-select') {
+        // For multi-select, use keyboard to toggle selections
+        const key = e.key.toUpperCase();
+        const optionIndex = key.charCodeAt(0) - 65; // A=0, B=1, etc
+        if (optionIndex >= 0 && optionIndex < currentQuestion.options.length) {
+          handleMultiSelect(key);
+        }
+      } else if (currentQuestion.type === 'single-choice') {
+        // For single-choice, select the option
+        const key = e.key.toUpperCase();
+        const optionIndex = key.charCodeAt(0) - 65; // A=0, B=1, etc
+        if (optionIndex >= 0 && optionIndex < currentQuestion.options.length) {
+          handleAnswerSelect(key);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [examState.currentQuestionIndex, showConfirmation, currentQuestion.type]);
+  }, [examState.currentQuestionIndex, showConfirmation, currentQuestion.type, currentAnswer]);
 
   const slideVariants = {
     enter: (direction) => ({
@@ -168,37 +186,90 @@ export const ExamInterface = () => {
                         autoFocus
                       />
                     </div>
-                  ) : (
-                    /* Multiple choice options */
-                    ['A', 'B', 'C', 'D'].map((option) => (
-                      <button
-                        key={option}
-                        onClick={() => handleAnswerSelect(option)}
-                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                          currentAnswer === option
-                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
-                            : 'border-slate-200 dark:border-gray-600 hover:border-slate-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700/50'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                              currentAnswer === option
-                                ? 'border-indigo-600 bg-indigo-600'
-                                : 'border-slate-300 dark:border-gray-500'
+                  ) : currentQuestion.type === 'multi-select' ? (
+                    /* Multi-select checkboxes */
+                    <>
+                      <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-3">
+                        Select all that apply
+                      </p>
+                      {currentQuestion.options.map((optionText, index) => {
+                        const optionLetter = String.fromCharCode(65 + index); // A, B, C, D, E
+                        const isSelected = Array.isArray(currentAnswer) && currentAnswer.includes(optionLetter);
+                        
+                        return (
+                          <button
+                            key={optionLetter}
+                            onClick={() => handleMultiSelect(optionLetter)}
+                            className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                              isSelected
+                                ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+                                : 'border-slate-200 dark:border-gray-600 hover:border-slate-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700/50'
                             }`}
                           >
-                            {currentAnswer === option && (
-                              <div className="w-3 h-3 rounded-full bg-white" />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-semibold text-slate-700 dark:text-gray-300 mr-2">{option}.</span>
-                            <span className="text-slate-900 dark:text-gray-100">{currentQuestion[`option${option}`]}</span>
-                          </div>
-                        </div>
-                      </button>
-                    ))
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                                  isSelected
+                                    ? 'border-indigo-600 bg-indigo-600'
+                                    : 'border-slate-300 dark:border-gray-500'
+                                }`}
+                              >
+                                {isSelected && (
+                                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                )}
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-semibold text-slate-700 dark:text-gray-300 mr-2">{optionLetter}.</span>
+                                <span className="text-slate-900 dark:text-gray-100">{optionText}</span>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    /* Single-choice radio buttons */
+                    <>
+                      <p className="text-sm font-medium text-slate-600 dark:text-gray-400 mb-3">
+                        Select one answer
+                      </p>
+                      {currentQuestion.options.map((optionText, index) => {
+                        const optionLetter = String.fromCharCode(65 + index); // A, B, C, D, E
+                        const isSelected = currentAnswer === optionLetter;
+                        
+                        return (
+                          <button
+                            key={optionLetter}
+                            onClick={() => handleAnswerSelect(optionLetter)}
+                            className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                              isSelected
+                                ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+                                : 'border-slate-200 dark:border-gray-600 hover:border-slate-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700/50'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                  isSelected
+                                    ? 'border-indigo-600 bg-indigo-600'
+                                    : 'border-slate-300 dark:border-gray-500'
+                                }`}
+                              >
+                                {isSelected && (
+                                  <div className="w-3 h-3 rounded-full bg-white" />
+                                )}
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-semibold text-slate-700 dark:text-gray-300 mr-2">{optionLetter}.</span>
+                                <span className="text-slate-900 dark:text-gray-100">{optionText}</span>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </>
                   )}
                 </div>
               </div>
