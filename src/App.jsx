@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
+import { ExamInterface } from './components/ExamInterface';
+import { FileUpload } from './components/FileUpload';
+import { QuizConfiguration } from './components/QuizConfiguration';
+import { ResultsDashboard } from './components/ResultsDashboard';
+import { ToastContainer } from './components/Toast';
+import { QuizProvider, useQuiz } from './contexts/QuizContext';
 
-function App() {
-  const [count, setCount] = useState(0)
+function AppContent() {
+  const { phase } = useQuiz();
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = (message, type = 'success') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, message, type }]);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
+
+  const pageVariants = {
+    initial: { opacity: 0, x: 20 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -20 },
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={phase}
+          variants={pageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={{ duration: 0.3 }}
+        >
+          {phase === 'ingestion' && <FileUpload onToast={addToast} />}
+          {phase === 'configuration' && <QuizConfiguration />}
+          {phase === 'exam' && <ExamInterface />}
+          {phase === 'analytics' && <ResultsDashboard />}
+        </motion.div>
+      </AnimatePresence>
+
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
-  )
+  );
 }
 
-export default App
+function App() {
+  return (
+    <QuizProvider>
+      <AppContent />
+    </QuizProvider>
+  );
+}
+
+export default App;
