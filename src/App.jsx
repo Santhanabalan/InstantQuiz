@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { ExamInterface } from './components/ExamInterface';
 import { FileUpload } from './components/FileUpload';
+import { LandingPage } from './components/LandingPage';
 import { QuizConfiguration } from './components/QuizConfiguration';
 import { ResultsDashboard } from './components/ResultsDashboard';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -40,6 +41,7 @@ function AppContent() {
           exit="exit"
           transition={{ duration: 0.3 }}
         >
+          {phase === 'landing' && <LandingPage onToast={addToast} />}
           {phase === 'ingestion' && <FileUpload onToast={addToast} />}
           {phase === 'configuration' && <QuizConfiguration />}
           {phase === 'exam' && <ExamInterface />}

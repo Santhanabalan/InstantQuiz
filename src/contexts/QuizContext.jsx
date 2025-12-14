@@ -11,7 +11,7 @@ export const useQuiz = () => {
 };
 
 export const QuizProvider = ({ children }) => {
-  const [phase, setPhase] = useState('ingestion'); // 'ingestion' | 'configuration' | 'exam' | 'analytics'
+  const [phase, setPhase] = useState('landing'); // 'landing' | 'ingestion' | 'configuration' | 'exam' | 'analytics'
   const [questions, setQuestions] = useState([]);
   const [originalQuestions, setOriginalQuestions] = useState([]); // Preserve original questions for retake
   const [config, setConfig] = useState({
@@ -199,9 +199,19 @@ export const QuizProvider = ({ children }) => {
     setPhase('analytics');
   };
 
+  // Navigate to landing page
+  const goToLanding = () => {
+    setPhase('landing');
+  };
+
+  // Navigate to upload/ingestion page
+  const goToUpload = () => {
+    setPhase('ingestion');
+  };
+
   // Reset to start
   const reset = () => {
-    setPhase('ingestion');
+    setPhase('landing');
     setQuestions([]);
     setOriginalQuestions([]);
     setConfig({
@@ -244,6 +254,8 @@ export const QuizProvider = ({ children }) => {
     config,
     examState,
     results,
+    goToLanding,
+    goToUpload,
     loadQuestions,
     startQuiz,
     setAnswer,
