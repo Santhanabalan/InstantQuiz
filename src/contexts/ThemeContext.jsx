@@ -32,14 +32,11 @@ export const ThemeProvider = ({ children }) => {
     // Persist to localStorage
     localStorage.setItem('quiz-theme', theme);
     
-    // Debug log
-    console.log('Theme updated:', theme, 'HTML has dark class:', root.classList.contains('dark'));
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => {
       const newTheme = prev === 'light' ? 'dark' : 'light';
-      console.log('Toggling theme from', prev, 'to', newTheme);
       return newTheme;
     });
   };
