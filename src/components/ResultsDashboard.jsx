@@ -33,7 +33,7 @@ export const ResultsDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 py-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 p-4 py-8 transition-colors">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -41,45 +41,45 @@ export const ResultsDashboard = () => {
         >
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Quiz Results</h1>
-            <p className="text-slate-600">
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Quiz Results</h1>
+            <p className="text-slate-600 dark:text-gray-300">
               {results.passed ? 'Congratulations! You passed!' : 'Keep practicing!'}
             </p>
           </div>
 
           {/* Score Ring */}
-          <div className="bg-white rounded-lg shadow-md border border-slate-200 p-8 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-slate-200 dark:border-gray-700 p-8 mb-6">
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="flex-shrink-0">
                 <ScoreRing score={results.score} passed={results.passed} />
               </div>
               <div className="flex-1 w-full">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                     <div className="flex items-center justify-center gap-2 mb-1">
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
-                      <span className="text-sm font-medium text-green-900">Correct</span>
+                      <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
+                      <span className="text-sm font-medium text-green-900 dark:text-green-100">Correct</span>
                     </div>
-                    <p className="text-2xl font-bold text-green-700">{results.correctCount}</p>
+                    <p className="text-2xl font-bold text-green-700 dark:text-green-400">{results.correctCount}</p>
                   </div>
-                  <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200">
+                  <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
                     <div className="flex items-center justify-center gap-2 mb-1">
-                      <XCircle className="w-5 h-5 text-red-600" />
-                      <span className="text-sm font-medium text-red-900">Incorrect</span>
+                      <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                      <span className="text-sm font-medium text-red-900 dark:text-red-100">Incorrect</span>
                     </div>
-                    <p className="text-2xl font-bold text-red-700">{results.incorrectCount}</p>
+                    <p className="text-2xl font-bold text-red-700 dark:text-red-400">{results.incorrectCount}</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                  <div className="text-center p-4 bg-slate-50 dark:bg-gray-700/50 rounded-lg border border-slate-200 dark:border-gray-600">
                     <div className="flex items-center justify-center gap-2 mb-1">
-                      <MinusCircle className="w-5 h-5 text-slate-600" />
-                      <span className="text-sm font-medium text-slate-900">Unanswered</span>
+                      <MinusCircle className="w-5 h-5 text-slate-600 dark:text-gray-400" />
+                      <span className="text-sm font-medium text-slate-900 dark:text-gray-100">Unanswered</span>
                     </div>
-                    <p className="text-2xl font-bold text-slate-700">{results.unansweredCount}</p>
+                    <p className="text-2xl font-bold text-slate-700 dark:text-gray-300">{results.unansweredCount}</p>
                   </div>
                 </div>
                 {results.timeSpent && (
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-900">
+                  <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p className="text-sm text-blue-900 dark:text-blue-200">
                       Time: {formatTime(results.timeSpent)} / {formatTime(results.timeLimit)}
                     </p>
                   </div>
@@ -99,7 +99,7 @@ export const ResultsDashboard = () => {
             </button>
             <button
               onClick={reset}
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-md transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 dark:bg-gray-700 hover:bg-slate-200 dark:hover:bg-gray-600 text-slate-700 dark:text-gray-200 font-medium rounded-md transition-colors"
             >
               <Upload className="w-5 h-5" />
               Upload New CSV
@@ -107,8 +107,8 @@ export const ResultsDashboard = () => {
           </div>
 
           {/* Filters */}
-          <div className="bg-white rounded-lg shadow-md border border-slate-200 p-6 mb-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Review Questions</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-slate-200 dark:border-gray-700 p-6 mb-6">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Review Questions</h2>
             <div className="flex flex-wrap gap-2">
               <FilterButton
                 active={filter === 'all'}
@@ -155,7 +155,7 @@ export const ResultsDashboard = () => {
               />
             ))}
             {filteredResults.length === 0 && (
-              <div className="text-center py-8 text-slate-500">
+              <div className="text-center py-8 text-slate-500 dark:text-gray-400">
                 No questions match this filter
               </div>
             )}
@@ -200,14 +200,14 @@ const ScoreRing = ({ score, passed }) => {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.p
-          className="text-4xl font-bold text-slate-900"
+          className="text-4xl font-bold text-slate-900 dark:text-white"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
           {score}%
         </motion.p>
-        <p className={`text-sm font-semibold ${passed ? 'text-green-600' : 'text-red-600'}`}>
+        <p className={`text-sm font-semibold ${passed ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
           {passed ? 'PASSED' : 'FAILED'}
         </p>
       </div>
@@ -217,10 +217,10 @@ const ScoreRing = ({ score, passed }) => {
 
 const FilterButton = ({ active, onClick, children, count, color = 'indigo' }) => {
   const colors = {
-    indigo: active ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200',
-    green: active ? 'bg-green-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200',
-    red: active ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200',
-    amber: active ? 'bg-amber-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200',
+    indigo: active ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-200 hover:bg-slate-200 dark:hover:bg-gray-600',
+    green: active ? 'bg-green-600 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-200 hover:bg-slate-200 dark:hover:bg-gray-600',
+    red: active ? 'bg-red-600 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-200 hover:bg-slate-200 dark:hover:bg-gray-600',
+    amber: active ? 'bg-amber-600 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-200 hover:bg-slate-200 dark:hover:bg-gray-600',
   };
 
   return (
@@ -249,30 +249,30 @@ const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
   );
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-slate-200 border-l-4 ${borderColor} overflow-hidden`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700 border-l-4 ${borderColor} overflow-hidden`}>
       <button
         onClick={onToggle}
-        className="w-full p-4 text-left hover:bg-slate-50 transition-colors"
+        className="w-full p-4 text-left hover:bg-slate-50 dark:hover:bg-gray-700/50 transition-colors"
       >
         <div className="flex items-start gap-3">
           {icon}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm font-medium text-slate-500">
+              <span className="text-sm font-medium text-slate-500 dark:text-gray-400">
                 Question {result.questionIndex + 1}
               </span>
               {result.wasMarkedForReview && (
-                <Flag className="w-4 h-4 text-amber-600 fill-current" />
+                <Flag className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-current" />
               )}
             </div>
-            <p className="text-slate-900 font-medium line-clamp-2">
+            <p className="text-slate-900 dark:text-white font-medium line-clamp-2">
               {result.questionText}
             </p>
           </div>
           {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-slate-400 flex-shrink-0" />
+            <ChevronUp className="w-5 h-5 text-slate-400 dark:text-gray-500 flex-shrink-0" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
+            <ChevronDown className="w-5 h-5 text-slate-400 dark:text-gray-500 flex-shrink-0" />
           )}
         </div>
       </button>
@@ -282,7 +282,7 @@ const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="border-t border-slate-200 p-4 bg-slate-50"
+          className="border-t border-slate-200 dark:border-gray-700 p-4 bg-slate-50 dark:bg-gray-700/50"
         >
           <div className="space-y-2">
             {['A', 'B', 'C', 'D'].map((option) => {
@@ -294,19 +294,19 @@ const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
                   key={option}
                   className={`p-3 rounded-md border ${
                     isCorrectAnswer
-                      ? 'border-green-500 bg-green-50'
+                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
                       : isUserAnswer
-                      ? 'border-red-500 bg-red-50'
-                      : 'border-slate-200 bg-white'
+                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                      : 'border-slate-200 dark:border-gray-600 bg-white dark:bg-gray-800'
                   }`}
                 >
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-slate-700">{option}.</span>
-                    <span className={isUserAnswer && !isCorrectAnswer ? 'line-through text-slate-500' : 'text-slate-900'}>
+                    <span className="font-semibold text-slate-700 dark:text-gray-300">{option}.</span>
+                    <span className={isUserAnswer && !isCorrectAnswer ? 'line-through text-slate-500 dark:text-gray-400' : 'text-slate-900 dark:text-gray-100'}>
                       {result.options[option]}
                     </span>
                     {isCorrectAnswer && (
-                      <CheckCircle2 className="w-5 h-5 text-green-600 ml-auto flex-shrink-0" />
+                      <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 ml-auto flex-shrink-0" />
                     )}
                   </div>
                 </div>
@@ -314,7 +314,7 @@ const QuestionReviewCard = ({ result, isExpanded, onToggle }) => {
             })}
           </div>
           {result.userAnswer === null && (
-            <p className="mt-3 text-sm text-slate-600 italic">You did not answer this question</p>
+            <p className="mt-3 text-sm text-slate-600 dark:text-gray-400 italic">You did not answer this question</p>
           )}
         </motion.div>
       )}

@@ -16,8 +16,8 @@ export const Toast = ({ message, type = 'success', onClose, duration = 3000 }) =
   };
 
   const colors = {
-    success: 'bg-green-50 border-green-200',
-    error: 'bg-red-50 border-red-200',
+    success: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800',
+    error: 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800',
   };
 
   return (
@@ -28,10 +28,10 @@ export const Toast = ({ message, type = 'success', onClose, duration = 3000 }) =
       className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-lg border ${colors[type]} shadow-lg max-w-md`}
     >
       {icons[type]}
-      <p className="flex-1 text-sm font-medium text-slate-900">{message}</p>
+      <p className="flex-1 text-sm font-medium text-slate-900 dark:text-gray-100">{message}</p>
       <button
         onClick={onClose}
-        className="text-slate-400 hover:text-slate-600 transition-colors"
+        className="text-slate-400 dark:text-gray-500 hover:text-slate-600 dark:hover:text-gray-300 transition-colors"
         aria-label="Close notification"
       >
         <X className="w-4 h-4" />

@@ -144,15 +144,15 @@ export const FileUpload = ({ onToast }) => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-50 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-gray-900 p-4 transition-colors">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-2xl"
       >
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">InstantQuiz</h1>
-          <p className="text-lg text-slate-600">Upload your CSV file to get started</p>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">InstantQuiz</h1>
+          <p className="text-lg text-slate-600 dark:text-gray-300">Upload your CSV file to get started</p>
         </div>
 
         <div
@@ -162,8 +162,8 @@ export const FileUpload = ({ onToast }) => {
           className={`
             relative border-2 border-dashed rounded-lg p-12 text-center transition-all
             ${isDragging 
-              ? 'border-indigo-600 bg-indigo-50' 
-              : 'border-slate-300 bg-white hover:border-slate-400'
+              ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20' 
+              : 'border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-slate-400 dark:hover:border-gray-500'
             }
             ${isProcessing ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}
           `}
@@ -180,19 +180,19 @@ export const FileUpload = ({ onToast }) => {
           <div className="flex flex-col items-center gap-4">
             {isProcessing ? (
               <>
-                <Loader2 className="w-16 h-16 text-indigo-600 animate-spin" />
-                <p className="text-lg font-medium text-slate-700">Processing CSV file...</p>
+                <Loader2 className="w-16 h-16 text-indigo-600 dark:text-indigo-400 animate-spin" />
+                <p className="text-lg font-medium text-slate-700 dark:text-gray-200">Processing CSV file...</p>
               </>
             ) : (
               <>
-                <div className="p-4 rounded-full bg-indigo-100">
-                  <Upload className="w-12 h-12 text-indigo-600" />
+                <div className="p-4 rounded-full bg-indigo-100 dark:bg-indigo-900/30">
+                  <Upload className="w-12 h-12 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
-                  <p className="text-lg font-medium text-slate-900 mb-1">
+                  <p className="text-lg font-medium text-slate-900 dark:text-white mb-1">
                     Drag and drop CSV file here, or click to browse
                   </p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-slate-500 dark:text-gray-400">
                     File should contain: Question, Option A, Option B, Option C, Option D, Correct Answer
                   </p>
                 </div>
@@ -201,12 +201,12 @@ export const FileUpload = ({ onToast }) => {
           </div>
         </div>
 
-        <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <div className="flex items-start gap-3">
-            <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
+            <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-blue-900 mb-2">CSV Format Requirements</h3>
-              <ul className="text-sm text-blue-800 space-y-1">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">CSV Format Requirements</h3>
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                 <li>• Must have exactly 6 columns</li>
                 <li>• Columns: Question Text, Option A, Option B, Option C, Option D, Correct Answer</li>
                 <li>• Correct Answer must be A, B, C, or D</li>

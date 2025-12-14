@@ -4,8 +4,10 @@ import { ExamInterface } from './components/ExamInterface';
 import { FileUpload } from './components/FileUpload';
 import { QuizConfiguration } from './components/QuizConfiguration';
 import { ResultsDashboard } from './components/ResultsDashboard';
+import { ThemeToggle } from './components/ThemeToggle';
 import { ToastContainer } from './components/Toast';
 import { QuizProvider, useQuiz } from './contexts/QuizContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 function AppContent() {
   const { phase } = useQuiz();
@@ -28,6 +30,7 @@ function AppContent() {
 
   return (
     <>
+      <ThemeToggle />
       <AnimatePresence mode="wait">
         <motion.div
           key={phase}
@@ -51,9 +54,11 @@ function AppContent() {
 
 function App() {
   return (
-    <QuizProvider>
-      <AppContent />
-    </QuizProvider>
+    <ThemeProvider>
+      <QuizProvider>
+        <AppContent />
+      </QuizProvider>
+    </ThemeProvider>
   );
 }
 

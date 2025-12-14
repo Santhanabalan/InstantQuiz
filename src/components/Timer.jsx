@@ -28,8 +28,8 @@ export const Timer = ({ startTime, durationMinutes, onTimeUp }) => {
     <div
       className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-lg font-semibold ${
         isWarning
-          ? 'bg-red-100 text-red-700 border border-red-300'
-          : 'bg-slate-100 text-slate-700 border border-slate-300'
+          ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-300 dark:border-red-700'
+          : 'bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-200 border border-slate-300 dark:border-gray-600'
       }`}
     >
       {isWarning ? (
