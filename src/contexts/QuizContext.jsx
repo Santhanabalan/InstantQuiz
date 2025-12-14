@@ -200,6 +200,10 @@ function shuffleArray(array) {
 }
 
 function shuffleOptions(question) {
+  // Get the correct answer value before shuffling
+  const correctOptionValue = question[`option${question.correctAnswer}`];
+  
+  // Create array of options with their keys
   const options = [
     { key: 'A', value: question.optionA },
     { key: 'B', value: question.optionB },
@@ -207,9 +211,20 @@ function shuffleOptions(question) {
     { key: 'D', value: question.optionD },
   ];
   
+  // Shuffle the options
   const shuffled = shuffleArray(options);
-  const correctOptionValue = question[`option${question.correctAnswer}`];
-  const newCorrectAnswer = shuffled.find(opt => opt.value === correctOptionValue).key;
+  
+  // Find the new position (index) of the correct answer in shuffled array
+  const correctAnswerIndex = shuffled.findIndex(opt => opt.value === correctOptionValue);
+  
+  // If we can't find the correct answer (shouldn't happen), return original question
+  if (correctAnswerIndex === -1) {
+    console.error('Failed to find correct answer after shuffle:', question);
+    return question;
+  }
+  
+  // Map index to letter: 0='A', 1='B', 2='C', 3='D'
+  const newCorrectAnswer = ['A', 'B', 'C', 'D'][correctAnswerIndex];
   
   return {
     ...question,
