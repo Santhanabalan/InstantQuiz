@@ -1,51 +1,79 @@
 # Implementation Tasks
 
 ## CSV Format Design
-- [ ] Define CSV format for multi-select questions (e.g., type column, pipe-separated correct answers)
+- [ ] Define flexible CSV format supporting 2-5 options per question
+- [ ] Support variable columns: Question, Option1, Option2, [Option3], [Option4], [Option5], Correct Answer
+- [ ] Define correct answer format:
+  - Single letter (A, B, C) → single-choice MCQ
+  - Comma-separated letters (A,C or B,D,E) → multi-select MCQ
 - [ ] Document CSV format examples in README
-- [ ] Create example multi-select quiz CSV file
+- [ ] Create example CSV with variable options and multi-select questions
 
 ## CSV Parsing
-- [ ] Update CSV parser to detect question type (single/multiple)
-- [ ] Parse multiple correct answers from CSV
-- [ ] Validate CSV format for multi-select questions
-- [ ] Add error handling for malformed multi-select data
+- [ ] Update parser to detect number of non-empty option columns (2-5)
+- [ ] Parse correct answer to determine question type (single vs multi-select)
+- [ ] Store question type, options array, and correct answers array
+- [ ] Validate that correct answer letters match available options
+- [ ] Add error handling for invalid option counts or answer formats
+- [ ] Maintain backward compatibility with existing 4-option format
 
-## Exam Interface
-- [ ] Add question type detection in ExamInterface
-- [ ] Implement checkbox UI for multi-select questions
-- [ ] Implement radio button UI for single-select questions (existing)
-- [ ] Add visual indicator showing "Select all that apply"
+## Data Model Updates
+- [ ] Update question schema to support variable options
+- [ ] Add `questionType` field: 'single-choice' | 'multi-select'
+- [ ] Store options as array instead of optionA/B/C/D
+- [ ] Store correct answers as array (even for single-choice)
+- [ ] Update all question references to use new schema
+
+## Exam Interface - UI Rendering
+- [ ] Detect question type and render appropriate input
+- [ ] Render radio buttons for single-choice questions
+- [ ] Render checkboxes for multi-select questions
+- [ ] Add visual indicator: "Select one answer" vs "Select all that apply"
+- [ ] Do NOT reveal number of correct answers in UI
+- [ ] Support 2-5 options dynamically in layout
 - [ ] Update answer selection state to handle arrays
-- [ ] Allow multiple answer selection for multi-select questions
 
 ## Answer Validation
-- [ ] Update validation logic to compare array of selected answers
-- [ ] Implement exact match scoring (all correct answers selected)
-- [ ] Implement partial credit scoring option
-- [ ] Add configuration option for partial credit vs all-or-nothing
+- [ ] Single-choice validation: exactly one answer selected
+- [ ] Multi-select validation: at least one answer selected
+- [ ] Update answer comparison logic for array-based answers
+- [ ] Implement all-or-nothing scoring (default)
+- [ ] Implement partial credit scoring (optional)
+- [ ] Handle edge cases (no selection, over-selection)
 
 ## Scoring Calculation
-- [ ] Update scoring algorithm to handle multi-select questions
-- [ ] Calculate partial credit based on correct/incorrect selections
-- [ ] Update score display to show partial credit
-- [ ] Maintain backward compatibility with single-select questions
+- [ ] Update scoring for single-choice (unchanged behavior)
+- [ ] Implement multi-select all-or-nothing scoring
+- [ ] Implement multi-select partial credit:
+  - Calculate correct selections / total correct answers
+  - Penalize incorrect selections (optional)
+- [ ] Add scoring mode configuration (all-or-nothing vs partial)
+- [ ] Maintain backward compatibility with existing questions
 
 ## Analytics Dashboard
-- [ ] Display multi-select questions in review
-- [ ] Show all correct answers for multi-select questions
-- [ ] Show user's selected answers vs correct answers
-- [ ] Update performance metrics for multi-select scoring
-- [ ] Add visual differentiation for multi-select results
+- [ ] Display variable number of options in review
+- [ ] Show checkbox/radio indicator based on question type
+- [ ] Display user's selected answers (highlight selected checkboxes/radios)
+- [ ] Show all correct answers for multi-select
+- [ ] Add partial credit score display (if applicable)
+- [ ] Visual differentiation for partially correct answers
+- [ ] Update filters to work with multi-select questions
 
 ## Quiz Configuration
-- [ ] Add configuration option for partial credit scoring
-- [ ] Add help text explaining multi-select question format
-- [ ] Update configuration UI to show scoring mode
+- [ ] Add scoring mode option: "All or Nothing" vs "Partial Credit"
+- [ ] Add help text explaining multi-select format
+- [ ] Update configuration UI with scoring mode toggle
+- [ ] Set sensible defaults (all-or-nothing for multi-select)
 
 ## Testing
-- [ ] Test CSV parsing with mixed single/multi-select questions
+- [ ] Test CSV with 2-option questions
+- [ ] Test CSV with 3-option questions
+- [ ] Test CSV with 5-option questions
+- [ ] Test mixed question types in one CSV
+- [ ] Test single-choice MCQ with one correct answer
+- [ ] Test multi-select with 2, 3, 4 correct answers
 - [ ] Test checkbox selection and deselection
 - [ ] Test partial credit calculation accuracy
 - [ ] Test all-or-nothing scoring accuracy
-- [ ] Verify backward compatibility with existing single-select quizzes
+- [ ] Verify no UI reveals number of correct answers
+- [ ] Test backward compatibility with existing 4-option CSVs
